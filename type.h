@@ -10,6 +10,7 @@ struct _SeqList{
 	size_t size;
 	union _SeqList_node*data;
 	struct _SeqList* (*getLength)(struct _SeqList*List);
+	struct _SeqList* (*clear)(struct _SeqList*List);
 };
 #endif
 
