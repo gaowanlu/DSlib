@@ -31,4 +31,5 @@ int main(void){
 		printf("%d\n",(List.data+i)->data_int);
 	}
 	return 0;
+
 }
