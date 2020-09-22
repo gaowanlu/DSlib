@@ -48,6 +48,34 @@ struct _SeqList* _SeqList_init(struct _SeqList**List){
 	(*List)->clear=_SeqList_clear;
 	return *List;
 }
+struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList_node inster_node,int flag){
+	//flag==1则延长表长，向后推
+	if(flag==1){
+		if(num>=0||num<=(*List)->size-1){//符合插入的位置
+			//则需要在原先表的基础之上扩大一个表长,采用数据暂存
+			struct _SeqList*temp_List;
+			_SeqList_init(&temp_List);
+			temp_List->size=(*List)->size;
+			temp_List->getLength(&temp_List);
+			//将List中的数据暂时备份在temp_List
+
+		}else{//不符合的插入位置
+			return NULL;
+		}
+
+
+
+	}
+	//flag==0则不延长表，直接向后，表尾数据可能丢失
+	else if(flag==0){
+
+
+
+	}
+
+
+	return List;
+}
 #endif
 
 
