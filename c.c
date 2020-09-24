@@ -25,6 +25,20 @@ int main(void){
 		printf("%d\n",(List->data+i)->data_int);
 	}
 	List->clear(&List);
+
+
+
+	struct _String *string;
+	_String_init(&string);
+	string->set(&string,"gaowanlu");
+	printf("%s\n",string->data);
+	printf("%ld\n",string->size);
+	string->set(&string,"chenxiaoming");
+	printf("%s\n",string->data);
+	printf("%ld\n",string->size);
+
+	string->clear(&string);
+	printf("%s\n",string->data);
 	return 0;
 /*运行结果
 0

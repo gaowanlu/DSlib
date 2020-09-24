@@ -1,5 +1,14 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+
 #ifndef __DSLIB_H__
 #define __DSLIB_H__
+
+//顺序表
+#ifndef ___SeqList__
+#define ___SeqList__
 union _SeqList_node;
 struct _SeqList;
 struct _SeqList* _SeqList_getMemory(struct _SeqList**List);
@@ -54,6 +63,8 @@ struct _SeqList* _SeqList_init(struct _SeqList**List){
 	(*List)->clear=_SeqList_clear;
 	(*List)->inster=_SeqList_inster;
 	(*List)->delete=_SeqList_delete;
+	//表长初始化为零
+	(*List)->size=0;
 	return *List;
 }
 struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList_node inster_node,int flag){
@@ -182,10 +193,78 @@ struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag){
 		*((*List)->data+num)=null_node;//表的长度不变
 	}
 }
-//@gaowanlu近期任务：新增delete函数->删除节点内容，同样有flag标志，是否前移或者直接union内容赋空
 #endif
 
 
+//字符串
+#ifndef ___String__
+#define ___String__
+struct _String;
+struct _String* _String_init(struct _String**string);
+struct _String* _String_set(struct _String**string,char*data);
+struct _String* _String_clear(struct _String**string);
+struct _String{
+	char*data;
+	size_t size;
+	struct _String* (*set)(struct _String**string,char*data);
+	struct _String* (*clear)(struct _String**string);
+};
+struct _String* _String_init(struct _String**string){
+	if(!string){
+		return NULL;
+	}
+	//为一维指针申请一个空间
+	*string=(struct _String*)malloc(sizeof(struct _String)*1);
+	if(!*string){//内存申请失败
+		return NULL;
+	}
+	//函数指针指向相应函数
+	(*string)->set=_String_set;
+	(*string)->clear=_String_clear;
+	//字符串长度初始化为零
+	(*string)->size=0;
+	return *string;
+}
 
+struct _String* _String_set(struct _String**string,char*data){
+	if(!string||!data){
+		return NULL;
+	}
+	size_t data_size=strlen(data);
+	//如果string->data不为NULL则进行内存释放
+	if((*string)->data!=NULL){
+		free((*string)->data);
+		(*string)->data=NULL;
+	}
+	//为*string->data重新申请内存
+	(*string)->data=(char*)malloc(sizeof(char)*data_size);
+	if(!(*string)->data){
+		return NULL;
+	}
+	//字符复制
+	for(size_t i=0;i<data_size;++i){
+		*((*string)->data+i)=*(data+i);
+	}
+	//字符号长度更新
+	(*string)->size=data_size;
+	return *string;
+}
 
+struct _String* _String_clear(struct _String**string){
+	if(!string){
+		return NULL;
+	}
+	//释放字符串指针的空间
+	if(!(*string)->data){
+		return NULL;
+	}
+	free((*string)->data);
+	(*string)->data=NULL;
+	(*string)->size=0;
+	return *string;
+}
+
+#endif
+
+#endif
 
