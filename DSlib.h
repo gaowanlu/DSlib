@@ -2,7 +2,7 @@
 #define __DSLIB_H__
 union _SeqList_node;
 struct _SeqList;
-struct _SeqList* _SeqList_getLength(struct _SeqList**List);
+struct _SeqList* _SeqList_getMemory(struct _SeqList**List);
 struct _SeqList* _SeqList_clear(struct _SeqList**List);
 struct _SeqList* _SeqList_init(struct  _SeqList**List);
 struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList_node inster_node,int flag);
@@ -16,12 +16,12 @@ union _SeqList_node{
 struct _SeqList{
 	size_t size;
 	union _SeqList_node*data;
-	struct _SeqList* (*getLength)(struct _SeqList**List);
+	struct _SeqList* (*getMemory)(struct _SeqList**List);
 	struct _SeqList* (*clear)(struct _SeqList**List);
 	struct _SeqList* (*inster)(struct _SeqList**List,size_t num,union _SeqList_node intser_node,int flag);
 	struct _SeqList* (*delete)(struct _SeqList**List,size_t num,int flag);
 };
-struct _SeqList* _SeqList_getLength(struct _SeqList**List){
+struct _SeqList* _SeqList_getMemory(struct _SeqList**List){
 	if(!List||!((*List)->size)){
 		return NULL;
 	}
@@ -50,7 +50,7 @@ struct _SeqList* _SeqList_init(struct _SeqList**List){
 	if(!*List){
 		return NULL;
 	}
-	(*List)->getLength=_SeqList_getLength;
+	(*List)->getMemory=_SeqList_getMemory;
 	(*List)->clear=_SeqList_clear;
 	(*List)->inster=_SeqList_inster;
 	(*List)->delete=_SeqList_delete;
@@ -67,7 +67,7 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 			struct _SeqList*temp_List;
 			_SeqList_init(&temp_List);
 			temp_List->size=(*List)->size;
-			temp_List->getLength(&temp_List);
+			temp_List->getMemory(&temp_List);
 			if(!temp_List){
 				return NULL;
 			}
@@ -108,7 +108,7 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 			struct _SeqList*temp_List;
 			_SeqList_init(&temp_List);
 			temp_List->size=(*List)->size;
-			temp_List->getLength(&temp_List);
+			temp_List->getMemory(&temp_List);
 			if(!temp_List){
 				return NULL;
 			}
@@ -149,7 +149,7 @@ struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag){
 		struct _SeqList*temp_List;
 		_SeqList_init(&temp_List);
 		temp_List->size=(*List)->size;
-		temp_List->getLength(&temp_List);
+		temp_List->getMemory(&temp_List);
 		if(!temp_List){
 			return NULL;
 		}

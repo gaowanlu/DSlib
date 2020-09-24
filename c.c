@@ -5,7 +5,7 @@ int main(void){
 	struct _SeqList *List;
 	_SeqList_init(&List);
 	List->size=10;
-	List->getLength(&List);
+	List->getMemory(&List);
 	//先进行内容赋值
 	for(size_t i=0;i<List->size;++i){
 		(List->data+i)->data_int=i;
