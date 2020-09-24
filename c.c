@@ -1,16 +1,25 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include"type.h"
+#include"DSlib.h"
 int main(void){
 	struct _SeqList *List;
 	_SeqList_init(&List);
 	List->size=10;
 	List->getLength(&List);
-	int i=0;
-	for(i=0;i<10;i++){
-		(List->data+i)->data_int=i+999;
+	//先进行内容赋值
+	for(size_t i=0;i<List->size;++i){
+		(List->data+i)->data_int=i;
 	}
-	for(i=0;i<10;i++){
+	//输出测试
+	for(size_t i=0;i<List->size;++i){
+		printf("%d\n",(List->data+i)->data_int);
+	}
+	//进行插入函数测试
+	union _SeqList_node new_node;
+	new_node.data_int=888;
+	List->inster(&List,List->size-1,new_node,0);
+	//输出进行验证
+	for(size_t i=0;i<List->size;++i){
 		printf("%d\n",(List->data+i)->data_int);
 	}
 	List->clear(&List);
