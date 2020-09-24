@@ -114,6 +114,10 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 	}
 	return *List;
 }
+//@gaowanlu近期任务：新增delete函数->删除节点内容，同样有flag标志，是否前移或者直接union内容赋空
+//
+//
+//
 #endif
 
 
