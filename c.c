@@ -18,6 +18,8 @@ int main(void){
 	union _SeqList_node new_node;
 	new_node.data_int=888;
 	List->inster(&List,List->size-1,new_node,0);
+	List->delete(&List,0,1);
+	List->delete(&List,List->size-2,0);
 	//输出进行验证
 	for(size_t i=0;i<List->size;++i){
 		printf("%d\n",(List->data+i)->data_int);

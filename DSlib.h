@@ -1,4 +1,3 @@
-
 #ifndef __DSLIB_H__
 #define __DSLIB_H__
 union _SeqList_node;
@@ -6,7 +5,8 @@ struct _SeqList;
 struct _SeqList* _SeqList_getLength(struct _SeqList**List);
 struct _SeqList* _SeqList_clear(struct _SeqList**List);
 struct _SeqList* _SeqList_init(struct  _SeqList**List);
-struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList_node inster_node,int flag); 
+struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList_node inster_node,int flag);
+struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag);
 union _SeqList_node{
 	int data_int;
 	float data_float;
@@ -19,9 +19,10 @@ struct _SeqList{
 	struct _SeqList* (*getLength)(struct _SeqList**List);
 	struct _SeqList* (*clear)(struct _SeqList**List);
 	struct _SeqList* (*inster)(struct _SeqList**List,size_t num,union _SeqList_node intser_node,int flag);
+	struct _SeqList* (*delete)(struct _SeqList**List,size_t num,int flag);
 };
 struct _SeqList* _SeqList_getLength(struct _SeqList**List){
-	if(!*List||!((*List)->size)){
+	if(!List||!((*List)->size)){
 		return NULL;
 	}
 	(*List)->data=(union _SeqList_node*)malloc(sizeof(union _SeqList_node)*((*List)->size));
@@ -41,6 +42,9 @@ struct _SeqList* _SeqList_clear(struct _SeqList**List){
 	return *List;
 }
 struct _SeqList* _SeqList_init(struct _SeqList**List){
+	if(!List){
+		return NULL;
+	}
 	//对二维指针申请内存，并将结构体内部的函数指针指向相应的函数
 	*List=(struct _SeqList*)malloc(sizeof(struct _SeqList)*1);
 	if(!*List){
@@ -49,9 +53,13 @@ struct _SeqList* _SeqList_init(struct _SeqList**List){
 	(*List)->getLength=_SeqList_getLength;
 	(*List)->clear=_SeqList_clear;
 	(*List)->inster=_SeqList_inster;
+	(*List)->delete=_SeqList_delete;
 	return *List;
 }
 struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList_node inster_node,int flag){
+	if(!List){
+		return NULL;
+	}
 	//flag==1则延长表长，向后推
 	if(flag==1){
 		if(num>=0||num<=(*List)->size){//符合插入的位置
@@ -122,6 +130,57 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 		}
 	}
 	return *List;
+}
+
+
+
+struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag){
+	if(!List){
+		return NULL;
+	}
+	//下标num限制
+	if(num<0||num>=(*List)->size){
+		return NULL;
+	}
+	//分为两种情况,删除一个则表内存空间减一，或者直接进行赋空
+	//flag==1则删除且内存减一,flag==0则是赋空操作
+	if(flag==1){
+		//进行内容拷贝
+		struct _SeqList*temp_List;
+		_SeqList_init(&temp_List);
+		temp_List->size=(*List)->size;
+		temp_List->getLength(&temp_List);
+		if(!temp_List){
+			return NULL;
+		}
+		for(size_t i=0;i<(*List)->size;++i){
+			*(temp_List->data+i)=*((*List)->data+i);
+		}
+		//释放List 表内存，重新申请，表长减一
+		if((*List)->size-1>=0){
+			free((*List)->data);
+			(*List)->data=NULL;
+			(*List)->data=(union _SeqList_node*)malloc(sizeof(union _SeqList_node)*((*List)->size-1));
+			if(!(*List)->data){
+				return NULL;
+			}
+			(*List)->size-=1;
+			size_t new_num=0;//记录转移进度
+			for(size_t i=0;i<temp_List->size;++i){
+				if(i==num){
+				}else{
+					*((*List)->data+new_num)=*(temp_List->data+i);
+					new_num+=1;
+				}
+			}
+		}else{
+			return NULL;
+		}
+
+	}else if(flag==0){
+		union _SeqList_node null_node;
+		*((*List)->data+num)=null_node;//表的长度不变
+	}
 }
 //@gaowanlu近期任务：新增delete函数->删除节点内容，同样有flag标志，是否前移或者直接union内容赋空
 #endif
