@@ -44,7 +44,7 @@ struct _SeqList* _SeqList_init(struct _SeqList**List){
 	//对二维指针申请内存，并将结构体内部的函数指针指向相应的函数
 	*List=(struct _SeqList*)malloc(sizeof(struct _SeqList)*1);
 	if(!*List){
-		return 0;
+		return NULL;
 	}
 	(*List)->getLength=_SeqList_getLength;
 	(*List)->clear=_SeqList_clear;
@@ -60,6 +60,9 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 			_SeqList_init(&temp_List);
 			temp_List->size=(*List)->size;
 			temp_List->getLength(&temp_List);
+			if(!temp_List){
+				return NULL;
+			}
 			//将List中的数据暂时备份在temp_List
 			for(size_t i=0;i<(*List)->size;++i){//进行数据拷贝
 				*(temp_List->data+i)=*((*List)->data+i);
@@ -69,6 +72,9 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 			//特殊情况：num==0则是前插入，num==0则是后插入
 			//进行重新申请内存
 			(*List)->data=(union _SeqList_node*)realloc((*List)->data,sizeof(union _SeqList_node)*((*List)->size+1));
+			if(!(*List)->data){
+				return NULL;
+			}
 			(*List)->size+=1;
 			//内存扩展完毕
 			//进行数据转移
@@ -95,6 +101,9 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 			_SeqList_init(&temp_List);
 			temp_List->size=(*List)->size;
 			temp_List->getLength(&temp_List);
+			if(!temp_List){
+				return NULL;
+			}
 			for(size_t i=0;i<(*List)->size;++i){
 				*(temp_List->data+i)=*((*List)->data+i);
 			}
@@ -115,9 +124,6 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 	return *List;
 }
 //@gaowanlu近期任务：新增delete函数->删除节点内容，同样有flag标志，是否前移或者直接union内容赋空
-//
-//
-//
 #endif
 
 
