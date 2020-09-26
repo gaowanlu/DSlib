@@ -346,6 +346,75 @@ void _String_copy(struct _String**string_1,struct _String**string_2){
 	(*string_2)->set(string_2,*((*string_1)->get(string_1)));
 	return ;
 }
+
+size_t _String_kmp(struct _String**string_1,struct _String**string_2){
+	//kmp字符串匹配算法，在string_1内s搜索string_2
+	if(!string_1||!string_2||!(*string_1)||!(*string_2)){
+		return -1;
+	}
+	if((*string_1)->size<=0||(*string_1)<=0||(*string_1)->size<(*string_2)->size){
+		return -1;
+	}
+	char *string=(*string_1)->data;
+	char *find_string=(*string_2)->data;
+	//进行创建next数组
+	size_t *next;
+	next=(size_t *)malloc(sizeof(size_t)*((*string_2)->size+2));
+	if(!next){
+		return -1;
+	}
+	//动态规划得到next数组
+	if(1){
+		
+	}
+	//kmps匹配
+	size_t reslut=-1;
+	if(1){
+
+	}
+	return reslut;
+}
+
+size_t _String_bf(struct _String**string_1,struct _String**string_2){
+	//bf字符串暴力匹配算法,在string_1内搜索string_2
+	size_t result=-1;
+	//df
+	if(!string_1||!string_2||!(*string_1)||!(*string_2)){
+		return -1;
+	}
+	if((*string_1)->size<=0||(*string_1)<=0||(*string_1)->size<(*string_2)->size){
+		return -1;
+	}
+	char *string=(*string_1)->data;
+	char *find_string=(*string_2)->data;
+	size_t i=0,j=0,k=0;
+	for(i=0;i<(*string_2)->size;++i){
+		int status=0;
+		for(j=0;j<=(*string_1)->size-(*string_2)->size;++j){
+			if(*((*string_2)->data+j) == *((*string_1)->data+i)){//向后匹配
+				size_t i_num=i,j_num=j;
+				for(;i_num<(*string_2)->size;){
+					if(*((*string_1)->data+j_num)!=*((*string_2)->data+i_num)){
+						break;
+					}
+					i_num++;
+					j_num++;
+				}
+				if(i_num==(*string_2)->size){
+					result=j;
+					status=1;
+				}
+			}
+			if(status){
+				break;
+			}
+		}
+		if(status){
+			break;
+		}
+	}
+	return result;
+}
 #endif
 
 
