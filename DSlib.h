@@ -7,8 +7,6 @@
 #define __DSLIB_H__
 
 //顺序表
-#ifndef _SeqList
-#define _SeqList
 union _SeqList_node;
 struct _SeqList;
 struct _SeqList* _SeqList_getMemory(struct _SeqList**List);
@@ -16,6 +14,7 @@ struct _SeqList* _SeqList_clear(struct _SeqList**List);
 struct _SeqList* _SeqList_init(struct  _SeqList**List);
 struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList_node inster_node,int flag);
 struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag);
+void             _SeqList_free(struct _SeqList**List);
 union _SeqList_node{
 	int data_int;
 	float data_float;
@@ -29,6 +28,7 @@ struct _SeqList{
 	struct _SeqList* (*clear)(struct _SeqList**List);
 	struct _SeqList* (*inster)(struct _SeqList**List,size_t num,union _SeqList_node intser_node,int flag);
 	struct _SeqList* (*delete)(struct _SeqList**List,size_t num,int flag);
+	void             (*free)(struct _SeqList**List);
 };
 struct _SeqList* _SeqList_getMemory(struct _SeqList**List){
 	if(!List||!((*List)->size)){
@@ -63,6 +63,7 @@ struct _SeqList* _SeqList_init(struct _SeqList**List){
 	(*List)->clear=_SeqList_clear;
 	(*List)->inster=_SeqList_inster;
 	(*List)->delete=_SeqList_delete;
+	(*List)->free=_SeqList_free;
 	//表长初始化为零
 	(*List)->size=0;
 	return *List;
@@ -193,21 +194,39 @@ struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag){
 		*((*List)->data+num)=null_node;//表的长度不变
 	}
 }
-#endif
+
+void _SeqList_free(struct _SeqList**List){
+	if(!List){
+		return ;
+	}
+	//将data指针申请的内存释放
+	free((*List)->data);
+	(*List)->data=NULL;
+	//将*List释放
+	free(*List);
+	*List=NULL;
+	return ;
+}
 
 
 //字符串
-#ifndef _String
-#define _String
 struct _String;
 struct _String* _String_init(struct _String**string);
 struct _String* _String_set(struct _String**string,char*data);
 struct _String* _String_clear(struct _String**string);
+char**          _String_get(struct _String**string);
+void            _String_free(struct _String**string);
+void            _String_print(struct _String**string);
+char**          _String_reverse(struct _String**string);
 struct _String{
 	char*data;
 	size_t size;
 	struct _String* (*set)(struct _String**string,char*data);
 	struct _String* (*clear)(struct _String**string);
+	char**          (*get)(struct _String**string);
+	void            (*free)(struct _String**string);
+	void            (*print)(struct _String**string);
+	char**          (*reverse)(struct _String**string);
 };
 struct _String* _String_init(struct _String**string){
 	if(!string){
@@ -221,6 +240,10 @@ struct _String* _String_init(struct _String**string){
 	//函数指针指向相应函数
 	(*string)->set=_String_set;
 	(*string)->clear=_String_clear;
+	(*string)->get=_String_get;
+	(*string)->free=_String_free;
+	(*string)->print=_String_print;
+	(*string)->reverse=_String_reverse;
 	//字符串长度初始化为零
 	(*string)->size=0;
 	return *string;
@@ -250,6 +273,8 @@ struct _String* _String_set(struct _String**string,char*data){
 	return *string;
 }
 
+
+
 struct _String* _String_clear(struct _String**string){
 	if(!string){
 		return NULL;
@@ -264,7 +289,53 @@ struct _String* _String_clear(struct _String**string){
 	return *string;
 }
 
+
+char** _String_get(struct _String**string){
+	if(!string){
+		return NULL;
+	}
+	return &((*string)->data);
+}
+
+
+void _String_free(struct _String**string){
+	if(!string){
+		return ;
+	}
+	//销毁对象
+	free(*string);
+	*string=NULL;
+	return ;
+}
+
+void _String_print(struct _String**string){
+	if(!string){
+		return ;
+	}
+	//打印data
+	if((*string)->data)
+	printf("%s\n",(*string)->data);
+	return ;
+}
+
+char** _String_reverse(struct _String**string){
+	//将data倒置
+	if(!string||!(*string)->data||(*string)->size==0){
+		return NULL;
+	}
+	size_t before=0;
+	size_t after=(*string)->size-1;
+	while(before<=after){
+		char temp;
+		temp=*((*string)->data+before);
+		*((*string)->data+before)=*((*string)->data+after);
+		*((*string)->data+after)=temp;
+		before+=1;
+		after-=1;
+	}
+	return &((*string)->data);
+}
 #endif
 
-#endif
+
 
