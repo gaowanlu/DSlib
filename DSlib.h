@@ -367,7 +367,7 @@ size_t _String_kmp(struct _String**string_1,struct _String**string_2){
 	if(1){
 		
 	}
-	//kmps匹配
+	//kmp匹配
 	size_t reslut=-1;
 	if(1){
 
