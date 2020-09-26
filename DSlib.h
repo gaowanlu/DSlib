@@ -7,8 +7,8 @@
 #define __DSLIB_H__
 
 //顺序表
-#ifndef ___SeqList__
-#define ___SeqList__
+#ifndef _SeqList
+#define _SeqList
 union _SeqList_node;
 struct _SeqList;
 struct _SeqList* _SeqList_getMemory(struct _SeqList**List);
@@ -197,8 +197,8 @@ struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag){
 
 
 //字符串
-#ifndef ___String__
-#define ___String__
+#ifndef _String
+#define _String
 struct _String;
 struct _String* _String_init(struct _String**string);
 struct _String* _String_set(struct _String**string,char*data);
