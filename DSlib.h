@@ -220,6 +220,7 @@ void            _String_print(struct _String**string);
 char**          _String_reverse(struct _String**string);
 void            _String_copy(struct _String**string_1,struct _String**string_2);
 size_t          _String_bf(struct _String**string_1,struct _String**string_2);
+size_t          _String_kmp(struct _String**string_1,struct _String**stirng_2);
 struct _String{
 	char*data;
 	size_t size;
@@ -231,6 +232,7 @@ struct _String{
 	char**          (*reverse)(struct _String**string);
 	void            (*copy)(struct _String**string_1,struct _String**stirng_2);
 	size_t          (*bf)(struct _String**string_1,struct _String**string_2);
+	size_t          (*kmp)(struct _String**string_1,struct _String**string_2);
 };
 struct _String* _String_init(struct _String**string){
 	if(!string){
@@ -250,6 +252,7 @@ struct _String* _String_init(struct _String**string){
 	(*string)->reverse=_String_reverse;
 	(*string)->copy=_String_copy;
 	(*string)->bf=_String_bf;
+	(*string)->kmp=_String_kmp;
 	//字符串长度初始化为零
 	(*string)->size=0;
 	return *string;
@@ -355,27 +358,102 @@ size_t _String_kmp(struct _String**string_1,struct _String**string_2){
 	if(!string_1||!string_2||!(*string_1)||!(*string_2)){
 		return -1;
 	}
-	if((*string_1)->size<=0||(*string_1)<=0||(*string_1)->size<(*string_2)->size){
+	if((*string_1)->size<=0||(*string_1)<=0||(*string_1)->size<(*string_2)->size||(*string_1)->size==0||(*string_2)->size==0){
 		return -1;
 	}
 	char *string=(*string_1)->data;
 	char *find_string=(*string_2)->data;
 	//进行创建next数组
 	size_t *next;
-	next=(size_t *)malloc(sizeof(size_t)*((*string_2)->size+2));
+	next=(size_t *)malloc(sizeof(size_t)*((*string_2)->size+1));
 	if(!next){
 		return -1;
 	}
 	//动态规划得到next数组
 	if(1){
-		
+		//temp_string
+		char*temp_string;
+		//复制字符串
+		temp_string=(char*)malloc(sizeof(char)*((*string_2)->size+1));
+		if(!temp_string){
+			return -1;
+		}
+		temp_string[0]=' ';
+		for(size_t i=1;i<((*string_2)->size+1);++i){
+			temp_string[i]=*((*string_2)->data+i-1);
+		}
+		//利用temp_string寻找next数组
+		size_t j=1,k=0;
+		next[1]=0;
+		while(j<((*string_2)->size+1)){
+			/*next
+			if(k==0||temp_string[j]==temp_string[k]){
+				next[++j]=++k;
+			}else{
+				k=next[k];
+			}*/
+			//nextval
+			if(k==0||temp_string[j]==temp_string[k]){
+				++k;
+				++j;
+				if(temp_string[j]==temp_string[k]){
+					next[j]=next[k];
+				}else{
+					next[j]=k;
+				}
+			}else{
+				k=next[k];
+			}
+
+		}
+		//输出next数组
+		//for(size_t i=1;i<((*string_2)->size+1);++i){
+		//	printf("%ld",next[i]);
+		//}
+		//printf("\n");
+		//free(temp_string);
+		//temp_string=NULL;
 	}
 	//kmp匹配
-	size_t reslut=-1;
-	if(1){
-
+	size_t result=-1;
+	if(1){	
+		char*temp_string_1;
+		//复制字符串
+		temp_string_1=(char*)malloc(sizeof(char)*((*string_1)->size+1));
+		if(!temp_string_1){
+			return -1;
+		}
+		temp_string_1[0]=' ';
+		for(size_t i=1;i<((*string_1)->size+1);++i){
+			temp_string_1[i]=*((*string_1)->data+i-1);
+		}
+		char*temp_string_2;
+		//复制字符串
+		temp_string_2=(char*)malloc(sizeof(char)*((*string_2)->size+1));
+		if(!temp_string_2){
+			return -1;
+		}
+		temp_string_2[0]=' ';
+		for(size_t i=1;i<((*string_2)->size+1);++i){
+			temp_string_2[i]=*((*string_2)->data+i-1);
+		}
+		//在temp_string_1内找temp_string_2
+		size_t i=1,j=1;
+		while(i<=((*string_1)->size)&&j<=((*string_2)->size)){
+			if(j==0||temp_string_1[i]==temp_string_2[j]){
+				++i;
+				++j;
+			}else{
+				j=next[j];
+			}
+		}
+		if(j>((*string_2)->size)){
+			result=i-((*string_2)->size)-1;
+		}else{
+			result=-1;
+		}
 	}
-	return reslut;
+	return result;
 }
 
 size_t _String_bf(struct _String**string_1,struct _String**string_2){
@@ -385,7 +463,7 @@ size_t _String_bf(struct _String**string_1,struct _String**string_2){
 	if(!string_1||!string_2||!(*string_1)||!(*string_2)){
 		return -1;
 	}
-	if((*string_1)->size<=0||(*string_1)<=0||(*string_1)->size<(*string_2)->size){
+	if((*string_1)->size<=0||(*string_1)<=0||(*string_1)->size<(*string_2)->size||(*string_1)->size==0||(*string_2)->size==0){
 		return -1;
 	}
 	char *string=(*string_1)->data;
