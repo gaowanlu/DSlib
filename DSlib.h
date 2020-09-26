@@ -15,11 +15,24 @@ struct _SeqList* _SeqList_init(struct  _SeqList**List);
 struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList_node inster_node,int flag);
 struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag);
 void             _SeqList_free(struct _SeqList**List);
+//字符串
+struct _String;
+struct _String* _String_init(struct _String**string);
+struct _String* _String_set(struct _String**string,char*data);
+struct _String* _String_clear(struct _String**string);
+char**          _String_get(struct _String**string);
+void            _String_free(struct _String**string);
+void            _String_print(struct _String**string);
+char**          _String_reverse(struct _String**string);
+void            _String_copy(struct _String**string_1,struct _String**string_2);
+size_t          _String_bf(struct _String**string_1,struct _String**string_2);
+size_t          _String_kmp(struct _String**string_1,struct _String**stirng_2);
 union _SeqList_node{
 	int data_int;
 	float data_float;
 	char data_char;
 	double data_double;
+	struct _String* data_string;
 };
 struct _SeqList{
 	size_t size;
