@@ -218,6 +218,7 @@ char**          _String_get(struct _String**string);
 void            _String_free(struct _String**string);
 void            _String_print(struct _String**string);
 char**          _String_reverse(struct _String**string);
+void            _String_copy(struct _String**string_1,struct _String**string_2);
 struct _String{
 	char*data;
 	size_t size;
@@ -227,6 +228,7 @@ struct _String{
 	void            (*free)(struct _String**string);
 	void            (*print)(struct _String**string);
 	char**          (*reverse)(struct _String**string);
+	void            (*copy)(struct _String**string_1,struct _String**stirng_2);
 };
 struct _String* _String_init(struct _String**string){
 	if(!string){
@@ -244,6 +246,7 @@ struct _String* _String_init(struct _String**string){
 	(*string)->free=_String_free;
 	(*string)->print=_String_print;
 	(*string)->reverse=_String_reverse;
+	(*string)->copy=_String_copy;
 	//字符串长度初始化为零
 	(*string)->size=0;
 	return *string;
@@ -334,6 +337,14 @@ char** _String_reverse(struct _String**string){
 		after-=1;
 	}
 	return &((*string)->data);
+}
+
+void _String_copy(struct _String**string_1,struct _String**string_2){
+	if(!string_1||!string_2||!(*string_2)){
+		return ;
+	}
+	(*string_2)->set(string_2,*((*string_1)->get(string_1)));
+	return ;
 }
 #endif
 

@@ -8,5 +8,12 @@ int main(void){
 	string->print(&string);
 	string->reverse(&string);
 	string->print(&string);
+
+	struct _String* string2;
+	_String_init(&string2);
+	string->copy(&string,&string2);
+	string2->print(&string2);
+
+
 	return 0;
 }
