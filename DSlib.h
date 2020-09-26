@@ -219,6 +219,7 @@ void            _String_free(struct _String**string);
 void            _String_print(struct _String**string);
 char**          _String_reverse(struct _String**string);
 void            _String_copy(struct _String**string_1,struct _String**string_2);
+size_t          _String_bf(struct _String**string_1,struct _String**string_2);
 struct _String{
 	char*data;
 	size_t size;
@@ -229,6 +230,7 @@ struct _String{
 	void            (*print)(struct _String**string);
 	char**          (*reverse)(struct _String**string);
 	void            (*copy)(struct _String**string_1,struct _String**stirng_2);
+	size_t          (*bf)(struct _String**string_1,struct _String**string_2);
 };
 struct _String* _String_init(struct _String**string){
 	if(!string){
@@ -247,6 +249,7 @@ struct _String* _String_init(struct _String**string){
 	(*string)->print=_String_print;
 	(*string)->reverse=_String_reverse;
 	(*string)->copy=_String_copy;
+	(*string)->bf=_String_bf;
 	//字符串长度初始化为零
 	(*string)->size=0;
 	return *string;
@@ -391,7 +394,8 @@ size_t _String_bf(struct _String**string_1,struct _String**string_2){
 	for(i=0;i<(*string_2)->size;++i){
 		int status=0;
 		for(j=0;j<=(*string_1)->size-(*string_2)->size;++j){
-			if(*((*string_2)->data+j) == *((*string_1)->data+i)){//向后匹配
+			//printf("%c",*((*string_1)->data+j));
+			if(*((*string_1)->data+j) == *((*string_2)->data+i)){//向后匹配
 				size_t i_num=i,j_num=j;
 				for(;i_num<(*string_2)->size;){
 					if(*((*string_1)->data+j_num)!=*((*string_2)->data+i_num)){
