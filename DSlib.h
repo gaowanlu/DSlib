@@ -497,6 +497,57 @@ size_t _String_bf(struct _String**string_1,struct _String**string_2){
 	}
 	return result;
 }
+
+
+
+
+//链表
+//first decleare
+union _LinkList_node_data;
+struct _LinkList_node;
+struct _LinkList;
+struct _LinkList* _LinkList_init(struct _LinkList**link);
+
+union _LinkList_node_data{
+	int data_int;
+	double data_double;
+	float data_float;
+	char data_char;
+};
+struct _LinkList_node{
+	union _LinkList data;
+	struct _LinkList_node *next;
+};
+struct _LinkList{
+	 struct _LinkList_node *headNode;
+};
+
+struct _LinkList* _LinkList_init(struct _LinkList**link){
+	//链表初始化
+	if(!link){
+		return NULL;
+	}
+	*link=(struct _LinkList*)malloc(sizeof(struct _LinkList)*1);
+	if(!*link){
+		return NULL;
+	}
+	(*link)->headNode=(struct _LinkList_node*)malloc(sizeof(struct _LinkList_node)*1);
+	if(!(*link)->headNode){
+		return NULL;
+	}
+	(*link)->headNode->next=NULL;
+	return *link;
+}
+
+void _LinkList* _LinkList_afterInster(struct _LinkList**link,struct _LinkList_node*node){
+	//链表尾插法
+}
+
+void _LinkList* _LinkList_beforeInster(struct _LinkList**link,struct _LinkList_node*node){
+	//链表头插法
+}
+
+
 #endif
 
 
