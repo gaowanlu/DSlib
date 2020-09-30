@@ -507,7 +507,12 @@ union _LinkList_node_data;
 struct _LinkList_node;
 struct _LinkList;
 struct _LinkList* _LinkList_init(struct _LinkList**link);
-
+void _LinkList_afterInster(struct _LinkList**link,struct _LinkList_node*node);
+void _LinkList_beforeInster(struct _LinkList**link,struct _LinkList_node*node);
+void _LinkList_delete(struct _LinkList**link,struct _LinkList_node*node);
+void _LinkList_free(struct _LinkList**link);
+void _LinkList_reverse(struct _LinkList**link);
+struct _LinkList_node* _LinkList_centerNode(struct _LinkList**link);
 union _LinkList_node_data{
 	int data_int;
 	double data_double;
@@ -515,11 +520,17 @@ union _LinkList_node_data{
 	char data_char;
 };
 struct _LinkList_node{
-	union _LinkList data;
+	union _LinkList_node_data data;
 	struct _LinkList_node *next;
 };
 struct _LinkList{
-	 struct _LinkList_node *headNode;
+	struct _LinkList_node *headNode;
+	void (*afterInster)(struct _LinkList**link,struct _LinkList_node*node);
+	void (*beforeInster)(struct _LinkList**link,struct _LinkList_node*node);
+	void (*delete)(struct _LinkList**link,struct _LinkList_node*node);
+	void (*free)(struct _LinkList**link);
+	void (*reverse)(struct _LinkList**link);
+	struct _LinkList_node* (*centerNode)(struct _LinkList**link);
 };
 
 struct _LinkList* _LinkList_init(struct _LinkList**link){
@@ -536,15 +547,44 @@ struct _LinkList* _LinkList_init(struct _LinkList**link){
 		return NULL;
 	}
 	(*link)->headNode->next=NULL;
+	//函数指针指向函数
+	(*link)->afterInster=_LinkList_afterInster;
+	(*link)->beforeInster=_LinkList_beforeInster;
+	(*link)->delete=_LinkList_delete;
+	(*link)->free=_LinkList_free;
+	(*link)->reverse=_LinkList_reverse;
+	(*link)->centerNode=_LinkList_centerNode;
 	return *link;
 }
 
-void _LinkList* _LinkList_afterInster(struct _LinkList**link,struct _LinkList_node*node){
+void _LinkList_afterInster(struct _LinkList**link,struct _LinkList_node*node){
 	//链表尾插法
+	return ;
 }
 
-void _LinkList* _LinkList_beforeInster(struct _LinkList**link,struct _LinkList_node*node){
+void _LinkList_beforeInster(struct _LinkList**link,struct _LinkList_node*node){
 	//链表头插法
+	return ;
+}
+
+void _LinkList_delete(struct _LinkList**link,struct _LinkList_node*node){
+	//链表节点删除
+	return ;
+}
+
+void _LinkList_free(struct _LinkList**link){
+	//链表空间释放
+	return ;
+}
+
+void _LinkList_reverse(struct _LinkList**link){
+	//就地逆置链表
+	return ;
+}
+
+struct _LinkList_node* _LinkList_centerNode(struct _LinkList**link){
+	//得到中间节点的指针
+	return NULL;
 }
 
 
