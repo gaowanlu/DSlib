@@ -107,6 +107,8 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 					++old_num;
 				}
 			}
+			//将temp_List内存释放
+			temp_List->free(&temp_List);
 			//插入完毕
 		}else{//不符合的插入位置
 			return NULL;
@@ -137,6 +139,8 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 					++old_num;
 				}
 			}
+			//使用过temp_List后我们应该将其内存进行释放
+			temp_List->free(&temp_List);
 		}else{
 			return NULL;
 		}
@@ -162,6 +166,7 @@ struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag){
 		_SeqList_init(&temp_List);
 		temp_List->size=(*List)->size;
 		temp_List->getMemory(&temp_List);
+		//
 		if(!temp_List){
 			return NULL;
 		}
@@ -185,6 +190,7 @@ struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag){
 					new_num+=1;
 				}
 			}
+			temp_List->free(&temp_List);
 		}else{
 			return NULL;
 		}
@@ -372,9 +378,9 @@ size_t _String_kmp(struct _String**string_1,struct _String**string_2){
 	//动态规划得到next数组
 	if(1){
 		//temp_string
-		char*temp_string;
+		char* temp_string;
 		//复制字符串
-		temp_string=(char*)malloc(sizeof(char)*((*string_2)->size+1));
+		temp_string=(char*)malloc(sizeof(char)*((*string_2)->size+1));//BUG::此处存在内存泄漏
 		if(!temp_string){
 			return -1;
 		}
@@ -411,13 +417,14 @@ size_t _String_kmp(struct _String**string_1,struct _String**string_2){
 		//	printf("%ld",next[i]);
 		//}
 		//printf("\n");
+		//if(temp_string)
 		//free(temp_string);
 		//temp_string=NULL;
 	}
 	//kmp匹配
 	size_t result=-1;
 	if(1){	
-		char*temp_string_1;
+		char* temp_string_1;
 		//复制字符串
 		temp_string_1=(char*)malloc(sizeof(char)*((*string_1)->size+1));
 		if(!temp_string_1){
@@ -429,7 +436,7 @@ size_t _String_kmp(struct _String**string_1,struct _String**string_2){
 		}
 		char*temp_string_2;
 		//复制字符串
-		temp_string_2=(char*)malloc(sizeof(char)*((*string_2)->size+1));
+		temp_string_2=(char*)malloc(sizeof(char)*((*string_2)->size+1));//BUG::此处存在内存泄漏
 		if(!temp_string_2){
 			return -1;
 		}
@@ -452,6 +459,8 @@ size_t _String_kmp(struct _String**string_1,struct _String**string_2){
 		}else{
 			result=-1;
 		}
+		//if(temp_string_1)
+		//free(temp_string_1);
 	}
 	return result;
 }
