@@ -120,6 +120,8 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 					++old_num;
 				}
 			}
+			//将temp_List内存释放
+			temp_List->free(&temp_List);
 			//插入完毕
 		}else{//不符合的插入位置
 			return NULL;
@@ -150,6 +152,8 @@ struct _SeqList* _SeqList_inster(struct _SeqList**List,size_t num,union _SeqList
 					++old_num;
 				}
 			}
+			//使用过temp_List后我们应该将其内存进行释放
+			temp_List->free(&temp_List);
 		}else{
 			return NULL;
 		}
@@ -175,6 +179,7 @@ struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag){
 		_SeqList_init(&temp_List);
 		temp_List->size=(*List)->size;
 		temp_List->getMemory(&temp_List);
+		//
 		if(!temp_List){
 			return NULL;
 		}
@@ -198,6 +203,7 @@ struct _SeqList* _SeqList_delete(struct _SeqList**List,size_t num,int flag){
 					new_num+=1;
 				}
 			}
+			temp_List->free(&temp_List);
 		}else{
 			return NULL;
 		}
@@ -385,9 +391,9 @@ size_t _String_kmp(struct _String**string_1,struct _String**string_2){
 	//动态规划得到next数组
 	if(1){
 		//temp_string
-		char*temp_string;
+		char* temp_string;
 		//复制字符串
-		temp_string=(char*)malloc(sizeof(char)*((*string_2)->size+1));
+		temp_string=(char*)malloc(sizeof(char)*((*string_2)->size+1));//BUG::此处存在内存泄漏
 		if(!temp_string){
 			return -1;
 		}
@@ -424,13 +430,14 @@ size_t _String_kmp(struct _String**string_1,struct _String**string_2){
 		//	printf("%ld",next[i]);
 		//}
 		//printf("\n");
+		//if(temp_string)
 		//free(temp_string);
 		//temp_string=NULL;
 	}
 	//kmp匹配
 	size_t result=-1;
 	if(1){	
-		char*temp_string_1;
+		char* temp_string_1;
 		//复制字符串
 		temp_string_1=(char*)malloc(sizeof(char)*((*string_1)->size+1));
 		if(!temp_string_1){
@@ -442,7 +449,7 @@ size_t _String_kmp(struct _String**string_1,struct _String**string_2){
 		}
 		char*temp_string_2;
 		//复制字符串
-		temp_string_2=(char*)malloc(sizeof(char)*((*string_2)->size+1));
+		temp_string_2=(char*)malloc(sizeof(char)*((*string_2)->size+1));//BUG::此处存在内存泄漏
 		if(!temp_string_2){
 			return -1;
 		}
@@ -465,6 +472,8 @@ size_t _String_kmp(struct _String**string_1,struct _String**string_2){
 		}else{
 			result=-1;
 		}
+		//if(temp_string_1)
+		//free(temp_string_1);
 	}
 	return result;
 }
@@ -510,6 +519,97 @@ size_t _String_bf(struct _String**string_1,struct _String**string_2){
 	}
 	return result;
 }
+
+
+
+
+//链表
+//first decleare
+union _LinkList_node_data;
+struct _LinkList_node;
+struct _LinkList;
+struct _LinkList* _LinkList_init(struct _LinkList**link);
+void _LinkList_afterInster(struct _LinkList**link,struct _LinkList_node*node);
+void _LinkList_beforeInster(struct _LinkList**link,struct _LinkList_node*node);
+void _LinkList_delete(struct _LinkList**link,struct _LinkList_node*node);
+void _LinkList_free(struct _LinkList**link);
+void _LinkList_reverse(struct _LinkList**link);
+struct _LinkList_node* _LinkList_centerNode(struct _LinkList**link);
+union _LinkList_node_data{
+	int data_int;
+	double data_double;
+	float data_float;
+	char data_char;
+};
+struct _LinkList_node{
+	union _LinkList_node_data data;
+	struct _LinkList_node *next;
+};
+struct _LinkList{
+	struct _LinkList_node *headNode;
+	void (*afterInster)(struct _LinkList**link,struct _LinkList_node*node);
+	void (*beforeInster)(struct _LinkList**link,struct _LinkList_node*node);
+	void (*delete)(struct _LinkList**link,struct _LinkList_node*node);
+	void (*free)(struct _LinkList**link);
+	void (*reverse)(struct _LinkList**link);
+	struct _LinkList_node* (*centerNode)(struct _LinkList**link);
+};
+
+struct _LinkList* _LinkList_init(struct _LinkList**link){
+	//链表初始化
+	if(!link){
+		return NULL;
+	}
+	*link=(struct _LinkList*)malloc(sizeof(struct _LinkList)*1);
+	if(!*link){
+		return NULL;
+	}
+	(*link)->headNode=(struct _LinkList_node*)malloc(sizeof(struct _LinkList_node)*1);
+	if(!(*link)->headNode){
+		return NULL;
+	}
+	(*link)->headNode->next=NULL;
+	//函数指针指向函数
+	(*link)->afterInster=_LinkList_afterInster;
+	(*link)->beforeInster=_LinkList_beforeInster;
+	(*link)->delete=_LinkList_delete;
+	(*link)->free=_LinkList_free;
+	(*link)->reverse=_LinkList_reverse;
+	(*link)->centerNode=_LinkList_centerNode;
+	return *link;
+}
+
+void _LinkList_afterInster(struct _LinkList**link,struct _LinkList_node*node){
+	//链表尾插法
+	return ;
+}
+
+void _LinkList_beforeInster(struct _LinkList**link,struct _LinkList_node*node){
+	//链表头插法
+	return ;
+}
+
+void _LinkList_delete(struct _LinkList**link,struct _LinkList_node*node){
+	//链表节点删除
+	return ;
+}
+
+void _LinkList_free(struct _LinkList**link){
+	//链表空间释放
+	return ;
+}
+
+void _LinkList_reverse(struct _LinkList**link){
+	//就地逆置链表
+	return ;
+}
+
+struct _LinkList_node* _LinkList_centerNode(struct _LinkList**link){
+	//得到中间节点的指针
+	return NULL;
+}
+
+
 #endif
 
 

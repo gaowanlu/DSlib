@@ -12,7 +12,7 @@ int main(void){
 	string2->print(&string2);
 	printf("%ld\n",string->kmp(&string,&string2));
 	printf("%ld\n",string->bf(&string,&string2));
-	string2->set(&string2,"");
+	string2->set(&string2,"er");
 	printf("%ld\n",string->kmp(&string,&string2));
 	printf("%ld\n",string->bf(&string,&string2));
 	struct _SeqList*list;
