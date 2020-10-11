@@ -534,7 +534,7 @@ void _LinkList_beforeInster(struct _LinkList**link,struct _LinkList_node*node);
 void _LinkList_delete(struct _LinkList**link,struct _LinkList_node*node);
 void _LinkList_free(struct _LinkList**link);
 void _LinkList_reverse(struct _LinkList**link);
-struct _LinkList_node* _LinkList_centerNode(struct _LinkList**link);
+int _LinkList_empty(struct _LinkList**link);
 union _LinkList_node_data{
 	int data_int;
 	double data_double;
@@ -552,6 +552,7 @@ struct _LinkList{
 	void (*delete)(struct _LinkList**link,struct _LinkList_node*node);
 	void (*free)(struct _LinkList**link);
 	void (*reverse)(struct _LinkList**link);
+	int  (*empty)(struct _LinkList**link);
 	struct _LinkList_node* (*centerNode)(struct _LinkList**link);
 };
 
@@ -575,40 +576,116 @@ struct _LinkList* _LinkList_init(struct _LinkList**link){
 	(*link)->delete=_LinkList_delete;
 	(*link)->free=_LinkList_free;
 	(*link)->reverse=_LinkList_reverse;
-	(*link)->centerNode=_LinkList_centerNode;
 	return *link;
 }
 
 void _LinkList_afterInster(struct _LinkList**link,struct _LinkList_node*node){
 	//链表尾插法
+	//尾插节点要找到最后一个结点
+	if(!link||!*link||!node){
+		return;
+	}
+	struct _LinkList_node*temp_node=(*link)->headNode;
+	while(temp_node->next!=NULL){
+		temp_node=temp_node->next;
+	}
+	//现在temp_node就是链表的尾节点
+	//建立新的节点插入
+	struct _LinkList_node*new_node=NULL;
+	new_node=(struct _LinkList_node*)malloc(sizeof(struct _LinkList_node)*1);
+	if(!new_node){
+		return;
+	}
+	//data转移
+	new_node->data=node->data;
+	//插入
+	temp_node->next=new_node;
+	new_node->next=NULL;
+	//插入完毕
 	return ;
 }
 
 void _LinkList_beforeInster(struct _LinkList**link,struct _LinkList_node*node){
+	if(!link||!*link||!node){//指针为假
+		return;
+	}
 	//链表头插法
-	return ;
+	//新建头结点
+	struct _LinkList_node*newnode=NULL;
+	newnode=(struct _LinkList_node*)malloc(sizeof(struct _LinkList_node)*1);
+	if(!newnode){
+		return;
+	}
+	//data转移
+	newnode->data=node->data;
+	newnode->next=(*link)->headNode->next;
+	(*link)->headNode->next=newnode;
+	//头插入节点完毕
+	return;
 }
 
 void _LinkList_delete(struct _LinkList**link,struct _LinkList_node*node){
-	//链表节点删除
+	//链表节点删除,需要给定所要删除节点的地址,node为所要删除的节点
+	if(!link||!*link||!node){//指针不合法
+		return;
+	}
+	//遍历表
+	struct _LinkList_node* temp_node=(*link)->headNode;
+	while(temp_node){
+		if(temp_node->next==node){//如果temp_node是node的前一个节点,则将node节点删除并释放
+			temp_node->next=node->next;
+			free(node);
+			break;
+		}
+		temp_node=temp_node->next;
+	}
 	return ;
 }
 
 void _LinkList_free(struct _LinkList**link){
 	//链表空间释放
+	if(!link||!*link){
+		return;
+	}
+	struct _LinkList_node* temp_node=(*link)->headNode;
+	while(temp_node){
+		struct _LinkList_node*free_node=temp_node;
+		temp_node=temp_node->next;
+		free(free_node);
+	}
+	//free *link
+	free(*link);
 	return ;
 }
 
 void _LinkList_reverse(struct _LinkList**link){
 	//就地逆置链表
+	if(!link||!*link){
+		return;
+	}
+	//printf("reverse\n");
+	//我们从headNode后面进行断开然后讲节点进行前插
+	struct _LinkList_node*temp_node=(*link)->headNode->next;
+	(*link)->headNode->next=NULL;
+	//然后开始前插
+	while(temp_node){
+		//printf(".%d\n",temp_node->data.data_int);
+		struct _LinkList_node *inster_node=temp_node;
+		temp_node=temp_node->next;
+		inster_node->next=(*link)->headNode->next;
+		(*link)->headNode->next=inster_node;
+	}
 	return ;
 }
 
-struct _LinkList_node* _LinkList_centerNode(struct _LinkList**link){
-	//得到中间节点的指针
-	return NULL;
+int _LinkList_empty(struct _LinkList**link){
+	//判断链表是否为空
+	if(!link||!*link||!(*link)->headNode||!(*link)->headNode->next){
+		return 1;
+	}else{
+		return 0;
+	}
 }
-
 
 #endif
 

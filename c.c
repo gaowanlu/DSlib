@@ -15,16 +15,30 @@ int main(void){
 	string2->set(&string2,"er");
 	printf("%ld\n",string->kmp(&string,&string2));
 	printf("%ld\n",string->bf(&string,&string2));
-	struct _SeqList*list;
-	_SeqList_init(&list);
-	list->size=10;
-	list->getMemory(&list);
-	for(int i=0;i<10;++i){
-		_String_init(&(((list->data)+i)->data_string));
-		((list->data)+i)->data_string->set(&(((list->data)+i)->data_string),"gaowanlu hello world");
+	//进行链表测试
+	struct _LinkList*list;
+	_LinkList_init(&list);
+	struct _LinkList_node TEMP;
+	(TEMP.data).data_int=0;
+	for(int i=0;i<10;i++){
+		(TEMP.data).data_int=i;
+		//list->afterInster(&list,&TEMP);
+		list->beforeInster(&list,&TEMP);
 	}
-	for(int i=0;i<10;++i){	
-		((list->data)+i)->data_string->print(&(((list->data)+i)->data_string));
+	//输出链表
+	struct _LinkList_node *loop=list->headNode->next;
+	while(loop){
+		printf("%d\n",(loop->data).data_int);
+		loop=loop->next;
+	}
+	//link to reverse
+	printf("reverse\n");
+	list->reverse(&list);
+	loop=list->headNode->next;
+	while(loop){
+		//printf("::::\n");
+		printf("%d\n",(loop->data).data_int);
+		loop=loop->next;
 	}
 	return 0;
 }
