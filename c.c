@@ -10,10 +10,10 @@ int main(void){
 	_String_init(&string2);
 	string2->set(&string2,"abaabe");
 	string2->print(&string2);
-	printf("%ld\n",string->kmp(&string,&string2));
+	printf("findstringusekmp_%lld\n",string->kmp(&string,&string2,0));
 	printf("%ld\n",string->bf(&string,&string2));
 	string2->set(&string2,"er");
-	printf("%ld\n",string->kmp(&string,&string2));
+	printf("findstringusekmp_%lld\n",string->kmp(&string,&string2,0));
 	printf("%ld\n",string->bf(&string,&string2));
 
 
