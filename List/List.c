@@ -10,8 +10,6 @@ void printSlist(struct ds_Slist*list){
 	}
 }
 
-
-
 int main(void){
 	ds_Slist* list=ds_InitSlist();
 	for(int i=0;i<9;i++){
@@ -36,8 +34,19 @@ int main(void){
 		node_data->ds_int=888;
 		list->BeforeInster(list,node_data);
 	}
-
 	printSlist(list);
+	printf("\n");
+
+	for(int i=0;i<1;i++){
+		ds_DataType*node_data;
+		node_data=(ds_DataType*)malloc(sizeof(ds_DataType));
+		node_data->ds_int=111;
+		list->InsterNode(list,list->headNode,node_data);
+	}
+	
+	printSlist(list);
+	printf("\n");
+
 	list->Free(list);
 
 	return 0;

@@ -3,14 +3,15 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"../DataType/DataType.h"
+
 struct ds_Slist;
 struct ds_Slist* ds_InitSlist(void);
 struct ds_SlistNode;
 struct ds_SlistNode* ds_Slist_BeforeInster(struct ds_Slist*Slist,union ds_DataType*InsterData);
 struct ds_SlistNode* ds_Slist_AfterInster(struct ds_Slist*Slist,union ds_DataType*InsterData);
 void   ds_Slist_Free(struct ds_Slist*Slist);
-int    ds_Slist_DelNode(struct ds_Slist*Slist,struct ds_SlistNode*DelNode);
-
+bool   ds_Slist_DelNode(struct ds_Slist*Slist,struct ds_SlistNode*DelNode);
+struct ds_SlistNode* ds_Slist_InsterNode(struct ds_Slist*Slist,struct ds_SlistNode*BeforeNode,union ds_DataType*InsterNode);
 
 typedef struct ds_SlistNode{
 	union ds_DataType *data;
@@ -24,7 +25,9 @@ typedef struct ds_Slist{
 	struct ds_SlistNode* (*BeforeInster)(struct ds_Slist*Slist,union ds_DataType*InsterData);
 	struct ds_SlistNode* (*AfterInster)(struct ds_Slist*Slist,union ds_DataType*InsterData);
 	void   (*Free)(struct ds_Slist*Slist);
-	int    (*DelNode)(struct ds_Slist*Slist,struct ds_SlistNode*DelNode);
+	bool   (*DelNode)(struct ds_Slist*Slist,struct ds_SlistNode*DelNode);
+	struct ds_SlistNode* (*InsterNode)(struct ds_Slist*Slist,struct ds_SlistNode*BeforeNode,union ds_DataType*InsterNode);
+
 }ds_Slist;
 
 
@@ -47,6 +50,7 @@ struct ds_Slist* ds_InitSlist(void){
 	Slist->Free=ds_Slist_Free;
 	Slist->AfterInster=ds_Slist_AfterInster;
 	Slist->DelNode=ds_Slist_DelNode;
+	Slist->InsterNode=ds_Slist_InsterNode;
 	return Slist;
 }
 
@@ -87,9 +91,10 @@ struct ds_SlistNode* ds_Slist_AfterInster(struct ds_Slist*Slist,union ds_DataTyp
 	return newNode;
 }
 
-int    ds_Slist_DelNode(struct ds_Slist*Slist,struct ds_SlistNode*DelNode){
+
+bool    ds_Slist_DelNode(struct ds_Slist*Slist,struct ds_SlistNode*DelNode){
 	if(!Slist||!DelNode){
-		return 0;
+		return false;
 	}
 	struct ds_SlistNode*BeforeNode=Slist->headNode;
 	struct ds_SlistNode*AfterNode=Slist->headNode->next;
@@ -106,7 +111,42 @@ int    ds_Slist_DelNode(struct ds_Slist*Slist,struct ds_SlistNode*DelNode){
 		free(AfterNode->data);
 		free(AfterNode);
 	}
-	return 1;
+	return true;
+}
+
+
+struct ds_SlistNode* ds_Slist_InsterNode(struct ds_Slist*Slist,struct ds_SlistNode*BeforeNode,union ds_DataType*InsterNode){//在某个节点的后面插入新的节点
+	//要在链表中搜索这个节点,因为可能链表中没有这个节点
+	struct ds_SlistNode*TempNode;
+	TempNode=Slist->headNode;
+	while(TempNode&&TempNode!=BeforeNode){
+		TempNode=TempNode->next;
+	}
+	if(TempNode==BeforeNode){
+		if(TempNode->next==NULL){//如果在尾节点后面插入新的节点，要改变尾指针
+			struct ds_SlistNode*newNode=NULL;
+			newNode=(struct ds_SlistNode*)malloc(sizeof(struct ds_SlistNode)*1);
+			if(!newNode){//内存申请失败
+				return NULL;
+			}
+			newNode->data=InsterNode;
+			newNode->next=TempNode->next;
+			TempNode->next=newNode;
+			Slist->endNode=newNode;
+			return newNode;
+		}else{//不是尾节点
+			struct ds_SlistNode*newNode=NULL;
+			newNode=(struct ds_SlistNode*)malloc(sizeof(struct ds_SlistNode)*1);
+			if(!newNode){//内存申请失败
+				return NULL;
+			}
+			newNode->data=InsterNode;
+			newNode->next=TempNode->next;
+			TempNode->next=newNode;
+			return newNode;
+		}
+	}
+	return NULL;
 }
 
 void   ds_Slist_Free(struct ds_Slist*Slist){
