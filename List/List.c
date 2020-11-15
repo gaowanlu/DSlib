@@ -3,6 +3,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 void printSlist(struct ds_Slist*list){
+	if(list==NULL){
+		printf("List is NULL\n");
+		return;
+	}
 	struct ds_SlistNode*tempnode=list->headNode->next;
 	while(tempnode){
 		printf("%d->",tempnode->data->ds_int);
@@ -22,13 +26,13 @@ int main(void){
 	list->DelNode(list,list->headNode->next);
 
 	
-	for(int i=0;i<1;i++){
+	for(int i=0;i<10;i++){
 		ds_DataType*node_data;
 		node_data=(ds_DataType*)malloc(sizeof(ds_DataType));
 		node_data->ds_int=999;
 		list->AfterInster(list,node_data);
 	}
-	for(int i=0;i<1;i++){
+	for(int i=0;i<10;i++){
 		ds_DataType*node_data;
 		node_data=(ds_DataType*)malloc(sizeof(ds_DataType));
 		node_data->ds_int=888;
@@ -37,7 +41,7 @@ int main(void){
 	printSlist(list);
 	printf("\n");
 
-	for(int i=0;i<1;i++){
+	for(int i=0;i<10;i++){
 		ds_DataType*node_data;
 		node_data=(ds_DataType*)malloc(sizeof(ds_DataType));
 		node_data->ds_int=111;
@@ -46,8 +50,10 @@ int main(void){
 	
 	printSlist(list);
 	printf("\n");
-
-	list->Free(list);
-
+	list->Reverse(list);
+	printSlist(list);
+	printf("\n");
+	list->Free(&list);
+	printSlist(list);
 	return 0;
 }

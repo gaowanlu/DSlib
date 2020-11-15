@@ -9,9 +9,10 @@ struct ds_Slist* ds_InitSlist(void);
 struct ds_SlistNode;
 struct ds_SlistNode* ds_Slist_BeforeInster(struct ds_Slist*Slist,union ds_DataType*InsterData);
 struct ds_SlistNode* ds_Slist_AfterInster(struct ds_Slist*Slist,union ds_DataType*InsterData);
-void   ds_Slist_Free(struct ds_Slist*Slist);
+void   ds_Slist_Free(struct ds_Slist**Slist);
 bool   ds_Slist_DelNode(struct ds_Slist*Slist,struct ds_SlistNode*DelNode);
 struct ds_SlistNode* ds_Slist_InsterNode(struct ds_Slist*Slist,struct ds_SlistNode*BeforeNode,union ds_DataType*InsterNode);
+bool   ds_Slist_Reverse(struct ds_Slist*Slist);
 
 typedef struct ds_SlistNode{
 	union ds_DataType *data;
@@ -24,9 +25,10 @@ typedef struct ds_Slist{
 	struct ds_SlistNode* endNode;
 	struct ds_SlistNode* (*BeforeInster)(struct ds_Slist*Slist,union ds_DataType*InsterData);
 	struct ds_SlistNode* (*AfterInster)(struct ds_Slist*Slist,union ds_DataType*InsterData);
-	void   (*Free)(struct ds_Slist*Slist);
+	void   (*Free)(struct ds_Slist**Slist);
 	bool   (*DelNode)(struct ds_Slist*Slist,struct ds_SlistNode*DelNode);
 	struct ds_SlistNode* (*InsterNode)(struct ds_Slist*Slist,struct ds_SlistNode*BeforeNode,union ds_DataType*InsterNode);
+	bool   (*Reverse)(struct ds_Slist*Slist);
 
 }ds_Slist;
 
@@ -51,6 +53,7 @@ struct ds_Slist* ds_InitSlist(void){
 	Slist->AfterInster=ds_Slist_AfterInster;
 	Slist->DelNode=ds_Slist_DelNode;
 	Slist->InsterNode=ds_Slist_InsterNode;
+	Slist->Reverse=ds_Slist_Reverse;
 	return Slist;
 }
 
@@ -149,7 +152,37 @@ struct ds_SlistNode* ds_Slist_InsterNode(struct ds_Slist*Slist,struct ds_SlistNo
 	return NULL;
 }
 
-void   ds_Slist_Free(struct ds_Slist*Slist){
+
+bool ds_Slist_Reverse(struct ds_Slist*Slist){
+	if(!Slist){//链表为空
+		return 0;
+	}
+	struct ds_SlistNode*TempNode=NULL;
+	TempNode=Slist->headNode->next;
+	Slist->headNode->next=NULL;
+	while(TempNode){
+		if(Slist->headNode->next==NULL){//要改变尾指针
+			Slist->endNode=TempNode;
+			TempNode=TempNode->next;
+			Slist->endNode->next=NULL;
+			Slist->headNode->next=Slist->endNode;
+		}else{
+			struct ds_SlistNode*p=TempNode;
+			TempNode=TempNode->next;
+			p->next=Slist->headNode->next;
+			Slist->headNode->next=p;
+		}
+	}
+	return 1;
+}
+
+
+
+void   ds_Slist_Free(struct ds_Slist**list){
+	if(!list){
+		return;
+	}
+	struct ds_Slist*Slist=*list;
 	if(!Slist){
 		return;
 	}
@@ -157,24 +190,12 @@ void   ds_Slist_Free(struct ds_Slist*Slist){
 	while(TempSlistNode){
 		struct ds_SlistNode*FreeNode=TempSlistNode;
 		TempSlistNode=TempSlistNode->next;
+		free(FreeNode->data);
 		free(FreeNode);
 	}
+	*list=NULL;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif
+
