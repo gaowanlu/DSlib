@@ -2,10 +2,12 @@
 数据结构(DSlib)
 
 # File-Tree
+* DataType  
+	* DataType.h(DSlib基本数据类型)
 * List  
-	*Slist.h(单项链表)  
-	*SeqList.h(顺序表)  
+	* Slist.h(单项链表)  
+	* SeqList.h(顺序表)  
 * String  
-	*String.h(字符串)  
+	* String.h(字符串)  
 
 
