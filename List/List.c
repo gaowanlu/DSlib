@@ -1,4 +1,4 @@
-#include"./List.h"
+#include"./Slist.h"
 #include"../DataType/DataType.h"
 #include<stdio.h>
 #include<stdlib.h>

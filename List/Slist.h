@@ -1,5 +1,5 @@
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef __SLIST_H__
+#define __SLIST_H__
 #include<stdio.h>
 #include<stdlib.h>
 #include"../DataType/DataType.h"
