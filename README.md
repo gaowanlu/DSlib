@@ -9,5 +9,6 @@
 	* SeqList.h(顺序表)  
 * String  
 	* String.h(字符串)  
-
+* Algorithm
+	* BinarySearch(二分查找)
 
