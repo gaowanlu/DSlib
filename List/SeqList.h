@@ -15,10 +15,10 @@ struct ds_SeqList;
 struct ds_SeqList *ds_InitSeqList(size_t length);
 bool ds_SeqList_Empty(struct ds_SeqList *list);
 bool ds_SeqList_Full(struct ds_SeqList *list);
-union ds_DataType *ds_SeqList_Push(struct ds_SeqList *list, union ds_SeqList_Add *pushData);			  //不可增长
-union ds_DataType *ds_SeqList_Add(struct ds_SeqList *list, union ds_SeqList_Add *addData);				  //自动增长
-union ds_DataType *ds_SeqList_Insert(struct ds_SeqList *list, size_t num, union ds_SeqList_Add *addData); //在表中间插入
-bool ds_DataType *ds_SeqList_Del(struct ds_SeqList *list, size_t num);									  //在表中删除下标为num的元素
+union ds_DataType *ds_SeqList_Push(struct ds_SeqList *list, union ds_DataType *pushData);			  //不可增长
+union ds_DataType *ds_SeqList_Add(struct ds_SeqList *list, union ds_DataType *addData);				  //自动增长
+union ds_DataType *ds_SeqList_Insert(struct ds_SeqList *list, size_t num, union ds_DataType *addData); //在表中间插入
+bool  ds_SeqList_Del(struct ds_SeqList *list, size_t num);									  //在表中删除下标为num的元素
 typedef struct ds_SeqList
 {
 	union ds_DataType *data;
@@ -26,10 +26,10 @@ typedef struct ds_SeqList
 	size_t cur;
 	bool (*Empty)(struct ds_SeqList *list);
 	bool (*Full)(struct ds_SeqList *list);
-	union ds_DataType *(*Push)(struct ds_SeqList *list, union ds_SeqList_Add *pushData);
-	union ds_DataType *(*Add)(struct ds_SeqList *list, union ds_SeqList_Add *addData);
-	union ds_DataType *(*Insert)(struct ds_SeqList *list, size_t num, union ds_SeqList_Add *addData);
-	bool ds_DataType *(*Del)(struct ds_SeqList *list, size_t num);
+	union ds_DataType *(*Push)(struct ds_SeqList *list, union ds_DataType *pushData);
+	union ds_DataType *(*Add)(struct ds_SeqList *list, union ds_DataType *addData);
+	union ds_DataType *(*Insert)(struct ds_SeqList *list, size_t num, union ds_DataType *addData);
+	bool (*Del)(struct ds_SeqList *list, size_t num);
 } ds_SeqList;
 
 struct ds_SeqList *ds_InitSeqList(size_t size)
@@ -56,7 +56,7 @@ struct ds_SeqList *ds_InitSeqList(size_t size)
 	return NewList;
 }
 
-bool ds_SeqList_empty(struct ds_SeqList *list)
+bool ds_SeqList_Empty(struct ds_SeqList *list)
 {
 	if (!list || !(list->data))
 	{
@@ -89,7 +89,7 @@ bool ds_SeqList_Full(struct ds_SeqList *list)
 }
 
 //注意Add与Push的区别
-union ds_DataType *ds_SeqList_Push(struct ds_SeqList *list, union ds_SeqList_Add *pushData)
+union ds_DataType *ds_SeqList_Push(struct ds_SeqList *list, union ds_DataType *pushData)
 {
 	if (!list || !(list->data) || !pushData)
 	{
@@ -131,14 +131,14 @@ union ds_DataType *ds_SeqList_Pop(struct ds_SeqList *list)
 	}
 }
 
-union ds_DataType *(*Push)(struct ds_SeqList *list, union ds_SeqList_Add *addData)
+union ds_DataType *ds_SeqList_Add(struct ds_SeqList *list, union ds_DataType *addData)
 {
 	if (!list || !(list->data) || !addData)
 	{
 		return NULL;
 	}
 	//判断是否已满
-	if (list->Full())
+	if (list->Full(list))
 	{
 		//重新申请内存
 		list->data = (union ds_DataType *)realloc(list->data, sizeof(union ds_DataType) * (list->length + 1));
@@ -161,7 +161,7 @@ union ds_DataType *(*Push)(struct ds_SeqList *list, union ds_SeqList_Add *addDat
 	return (list->data + list->cur - 1);
 }
 
-union ds_DataType *(*Insert)(struct ds_SeqList *list, size_t num, union ds_SeqList_Add *addData)
+union ds_DataType *ds_SeqList_Insert(struct ds_SeqList *list, size_t num, union ds_DataType *addData)
 {
 	if (!list || !(list->data) || num < 0 || num > list->cur - 1)
 	{
@@ -201,7 +201,7 @@ union ds_DataType *(*Insert)(struct ds_SeqList *list, size_t num, union ds_SeqLi
 	}
 }
 
-bool ds_DataType *ds_SeqList_Del(struct ds_SeqList *list, size_t num)
+bool ds_SeqList_Del(struct ds_SeqList *list, size_t num)
 {
 	if (!list || !(list->data) || num < 0 || num >= list->cur)
 	{
