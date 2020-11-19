@@ -53,6 +53,7 @@ struct ds_SeqList *ds_InitSeqList(size_t size)
 	NewList->Push = ds_SeqList_Push;
 	NewList->Insert = ds_SeqList_Insert;
 	NewList->Del = ds_SeqList_Del;
+	NewList->Add = ds_SeqList_Add;
 	return NewList;
 }
 
@@ -100,7 +101,7 @@ union ds_DataType *ds_SeqList_Push(struct ds_SeqList *list, union ds_DataType *p
 	{
 		return NULL;
 	}
-	list->data[list->cur - 1] = *pushData;
+	list->data[list->cur] = *pushData;
 	list->cur += 1;
 	return (list->data + list->cur - 1);
 }
