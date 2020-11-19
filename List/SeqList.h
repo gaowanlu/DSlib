@@ -19,6 +19,8 @@ union ds_DataType *ds_SeqList_Push(struct ds_SeqList *list, union ds_DataType *p
 union ds_DataType *ds_SeqList_Add(struct ds_SeqList *list, union ds_DataType *addData);				  //自动增长
 union ds_DataType *ds_SeqList_Insert(struct ds_SeqList *list, size_t num, union ds_DataType *addData); //在表中间插入
 bool  ds_SeqList_Del(struct ds_SeqList *list, size_t num);									  //在表中删除下标为num的元素
+void ds_SeqList_Free(struct ds_SeqList **list);
+
 typedef struct ds_SeqList
 {
 	union ds_DataType *data;
@@ -30,6 +32,7 @@ typedef struct ds_SeqList
 	union ds_DataType *(*Add)(struct ds_SeqList *list, union ds_DataType *addData);
 	union ds_DataType *(*Insert)(struct ds_SeqList *list, size_t num, union ds_DataType *addData);
 	bool (*Del)(struct ds_SeqList *list, size_t num);
+	void (*Free)(struct ds_SeqList **list);
 } ds_SeqList;
 
 struct ds_SeqList *ds_InitSeqList(size_t size)
@@ -54,6 +57,7 @@ struct ds_SeqList *ds_InitSeqList(size_t size)
 	NewList->Insert = ds_SeqList_Insert;
 	NewList->Del = ds_SeqList_Del;
 	NewList->Add = ds_SeqList_Add;
+	NewList->Free = ds_SeqList_Free;
 	return NewList;
 }
 
@@ -217,4 +221,17 @@ bool ds_SeqList_Del(struct ds_SeqList *list, size_t num)
 	list->cur -= 1;
 }
 
+
+void ds_SeqList_Free(struct ds_SeqList **list){
+	if(!list||!(*list)){
+		return;
+	}
+	if((*list)->data){
+		free((*list)->data);
+	}
+	(*list)->length = 0;
+	(*list)->cur = 0;
+	free(*list);
+	*list = NULL;
+}
 #endif
