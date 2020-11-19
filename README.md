@@ -11,4 +11,13 @@
 	* String.h(字符串)  
 * Algorithm
 	* BinarySearch(二分查找)
+    	* BinarySearch.h
+    * BinarySearchTree(二叉查找树)
+        *  BinarySearchTree.c
+    * Sort(排序)
+        *  BinaryInsertionSort(二分插入排序)
+        *  DirectInsertionSort(直接插入排序)
+        *  ShellSort(希尔排序)
+* Hash
+    * Hashtable.h(哈希表)
 
