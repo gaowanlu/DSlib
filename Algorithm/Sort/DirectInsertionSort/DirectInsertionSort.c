@@ -11,10 +11,8 @@ void ds_DirectInsertionSort(struct ds_SeqList*list,size_t before,size_t after){
         if(list->data[i].SORTDSDATA<list->data[i-1].SORTDSDATA){
             union ds_DataType temp = list->data[i];
             list->data[i] = list->data[i - 1];
-            for (j = i - 2;  j > before&&list->data[j].SORTDSDATA > temp.SORTDSDATA;j--)
-                printf("j-%d\n", j);
+            for (j = i - 2;  j >= before&&list->data[j].SORTDSDATA > temp.SORTDSDATA;j--)
                 list->data[j + 1] = list->data[j];
-            if(j+1>=before&&j+1<=after)
             list->data[j+1] = temp;
         }
     }
