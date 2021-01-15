@@ -1,7 +1,8 @@
-# DSlib
-数据结构(DSlib)
+# DSinc
+一个用C语言实现的数据结构函数库
 
 # File-Tree
+<<<<<<< HEAD
 * DataType  
 	* DataType.h(DSlib基本数据类型)
 * List  
@@ -21,4 +22,7 @@
 		*  MergeSort(归并排序)
 * Hash
     * Hashtable.h(哈希表)
+=======
+
+>>>>>>> master
 
