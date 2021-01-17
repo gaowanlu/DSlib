@@ -57,6 +57,7 @@ struct SequenceList* SequenceList_init(struct SequenceList*list){
 
 
 //顺序表取值操作
+//返回相应下标的元素空间地址
 struct CommonType* SequenceList_value(struct SequenceList*list,size_t get){
     //检测指针
     if(!list){
@@ -71,17 +72,65 @@ struct CommonType* SequenceList_value(struct SequenceList*list,size_t get){
 }
 
 
-//顺序标push操作:将el放入顺序表表尾的位置
+//顺序表push操作:将el放入顺序表表尾的位置
 struct CommonType* SequenceList_push(struct SequenceList*list,struct CommonType*el){
 	//检测指针
-	if(!list||!list->el||list->cur>=list->max){
+	if(!list||!list->el||list->cur>=list->max||!el){
 		return NULL;
 	}
-
-
-
+	//内容拷贝
+	list->el[list->cur]=*el;
+	list->cur+=1;
+	//返回push到位置的地址
+	return (list->el+list->cur)-1;
 }
 
+
+//顺序表pop操作:将下标cur-1的位置元素删除，并内容返回
+//参数:list 为顺序表地址、el为将要pop的元素进行拷贝到el内
+struct CommonType* SequenceList_pop(struct SequenceList*list,struct CommonType*el){
+	//检测指针
+	if(!list||!list->el||list->cur==0||!el){
+		return NULL;
+	}
+	//内容拷贝
+	*el=list->el[list->cur-1];
+	list->cur=list->cur-1;
+	//返回
+	return el;
+}
+
+
+//顺序表insert操作
+//功能在下标为index位置进行插入操作
+//插入的范围为[0,list.cur]
+//插入操作:在顺序表中第i个位置之前插入一个元素，需要从最后一个元素开始
+//后移一位直到把第i个元素也后移一位，然后把新的的元素放到第i个位置
+struct CommonType* SequenceList_insert(struct SequenceList*list,struct CommonType*el,size_t index){
+	//检测指针与传进来的新元素是否真的存在,判断顺序表是否已经满了
+	if(!list||!list->el||list->max==0||list->cur==list->max||!el){
+		return NULL;
+	}
+	//检测下标是否合法
+	if(index<0||index>list->cur){
+		return NULL;
+	}
+	//进行插入相关操作
+	//需要从末尾开始后移
+	size_t i=list->cur;
+	for(i=list->cur;i>index;i--){
+		list->el[i]=list->el[i-1];
+	}
+	//现在下标为index的位置可以放入新的元素
+	//printf("*%d\n",el->int_data);
+	list->el[index]=*el;
+	//更新cur
+	list->cur+=1;
+	//返回
+	return (list->el+index);
+	//@2021/1/17 21:48 现在家人们接我到家，在家里这么快乐的学习，简直太快乐了。我也要珍惜这些时光去学习、去陪伴家人。
+	//编码人员:高万禄 2021/1/17 已测试无bug
+}
 
 
 

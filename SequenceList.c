@@ -4,24 +4,34 @@ int main(int argc,char**argv){
     struct SequenceList list;
     list.max=10;
     SequenceList_init(&list);
-    int i=0;
-    printf("hello world\n");
-    for(i=0;i<list.max;++i){
-        list.el[i].int_data=i;
-        list.el[i].id=888;
-        list.el[i].name='g';
-    }
+	int i=0;
+	while(list.cur!=list.max){
+		struct CommonType el;
+		el.int_data=i++;
+		SequenceList_push(&list,&el);
+	}
+	for(i=0;i<list.cur;++i){
+		printf("%d\n",list.el[i].int_data);
+	}
 
-    //打印测试
-    for(i=0;i<list.max;++i){
-        printf("%d\n",i);
-        printf("\t%d\n",list.el[i].int_data);
-        printf("\t%d\n",list.el[i].id);
-        printf("\t%c\n",list.el[i].name);
-    }
-    struct CommonType* data=SequenceList_value(&list,2);
-    if(data)
-        printf("--%d\n",data->id);    
+	//进行pop测试
+	while(list.cur!=0){
+		struct CommonType el;
+		SequenceList_pop(&list,&el);
+		printf("%d\n",el.int_data);
+	}
+	//现在顺序表已经被pop空了
+	//我们将在下标为0的位置进行insert操作
+	struct CommonType el;
+	el.int_data=999;
+	for(i=0;i<15;i++){
+		el.int_data=i;
+		SequenceList_insert(&list,&el,0);
+	}
+	//输出验证
+	for(i=0;i<list.cur;i++){
+		printf("--%d\n",list.el[i].int_data);
+	}
     //释放顺序表内存的方法
     list.max=0;
     SequenceList_init(&list);
