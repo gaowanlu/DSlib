@@ -13,7 +13,6 @@ int main(int argc,char**argv){
 	for(i=0;i<list.cur;++i){
 		printf("%d\n",list.el[i].int_data);
 	}
-
 	//进行pop测试
 	while(list.cur!=0){
 		struct CommonType el;
@@ -31,6 +30,16 @@ int main(int argc,char**argv){
 	//输出验证
 	for(i=0;i<list.cur;i++){
 		printf("--%d\n",list.el[i].int_data);
+	}
+	//删除操作
+	SequenceList_delete(&list,0);
+	SequenceList_delete(&list,2);
+	SequenceList_delete(&list,4);
+	SequenceList_delete(&list,0);
+	SequenceList_delete(&list,0);
+	//输出验证
+	for(i=0;i<list.cur;i++){
+		printf("**%d\n",list.el[i].int_data);
 	}
     //释放顺序表内存的方法
     list.max=0;
