@@ -9,4 +9,16 @@
 * SequenceList_pop();(弹出顺序表末尾的元素)
 * SequenceList_insert();(往顺序表中插入一个元素)
 * SequenceList_delete();(删除顺序表指定下标位置的元素)
+* SequenceList_find();(在顺序表中查找是否有相应元素)
+
+## Slist.h(单向链表)
+* Slist_init();(初始化单向链表)
+* Slist_free();(释放链表)
+* Slist_before();(头插法加入新节点)
+* Slist_after();(尾插法加入新节点)
+* Slist_value();(获得第index个节点地址)
+* Slist_find();(查找元素在链表中是否存在)
+* Slist_insert();(在指定位置插入新节点)
+* Slist_delete();(删除指定位置的节点)
+
 
