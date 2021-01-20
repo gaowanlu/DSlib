@@ -116,6 +116,9 @@ struct SlistNode* Slist_value(struct SlistNode* headNode,size_t index){
 	struct SlistNode*tempNode=headNode;
 	size_t i=0;
 	for(i=0;i<index;++i){
+		if(!tempNode){
+			break;
+		}
 		tempNode=tempNode->next;
 	}
 	//返回找到的节点地址
@@ -123,25 +126,6 @@ struct SlistNode* Slist_value(struct SlistNode* headNode,size_t index){
 }
 
 
-//Slist查找
-//功能：查找在链表中是否存在某些元素，找到第一个就返回
-//返回：查找成功则返回找到的节点的地址，否则返回NULL
-struct SlistNode* Slist_find(struct SlistNode* headNode,struct SlistNode* findNode){
-	//检测指针
-	if(!headNode||!findNode){
-		return NULL;
-	}
-	//开始迭代
-	struct SlistNode* tempNode=headNode;
-	while(tempNode){
-		if(*tempNode==*findNode){
-			break;
-		}
-		tempNode=tempNode->next;
-	}
-	//返回节点地址
-	return tempNode;
-}
 
 //Slist插入
 //功能：在第n个节点的位置插入新节点，也就是原来的第n个节点变为原来的第n+1个
@@ -167,7 +151,7 @@ struct SlistNode* Slist_insert(struct SlistNode* headNode,struct SlistNode* newN
 		i++;
 	}
 	//判断tempNode
-	if(tempNode){//不能插入
+	if(!tempNode){//不能插入
 		return NULL;
 	}
 	//进行新节点的插入
@@ -189,7 +173,7 @@ struct SlistNode* Slist_insert(struct SlistNode* headNode,struct SlistNode* newN
 //Slist删除
 //功能：删除指定节点
 //返回：删除成功返回1否则返回0
-int SlistNode* Slist_delete(struct SlistNode* headNode,size_t index){
+int Slist_delete(struct SlistNode* headNode,size_t index){
 	//检测指针
 	if(!headNode){
 		return 0;
@@ -204,11 +188,11 @@ int SlistNode* Slist_delete(struct SlistNode* headNode,size_t index){
 		if(tempNode==NULL){
 			break;
 		}
-		tempNode=temp->next;
+		tempNode=tempNode->next;
 		i++;
 	}
 	if(!tempNode||!tempNode->next){
-		return NULL;
+		return 0;
 	}
 	struct SlistNode*freeNode=tempNode->next;
 	tempNode->next=tempNode->next->next;

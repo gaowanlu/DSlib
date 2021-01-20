@@ -37,6 +37,10 @@ int main(int argc,char**argv){
 	SequenceList_delete(&list,4);
 	SequenceList_delete(&list,0);
 	SequenceList_delete(&list,0);
+	//清空顺序表
+	list->cur=0;
+
+
 	//输出验证
 	for(i=0;i<list.cur;i++){
 		printf("**%d\n",list.el[i].int_data);

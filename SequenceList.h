@@ -157,26 +157,6 @@ int SequenceList_delete(struct SequenceList*list,size_t index){
 	return 1;
 }
 
-//顺序表find操作
-//功能：在顺序表中查找第一个查找的元素的下标
-//返回:查找成功返回下标，查找失败返回-1
-size_t SequenceList_find(struct SequenceList*list,struct CommonType*find){
-	//检测指针
-	if(!list||!list->el||!find||list->cur==0||list->max==0){
-		return -1;
-	}
-	//迭代查找
-	size_t i=0;
-	for(i=0;i<list->cur;i++){
-		if(list->el[i]==*find){
-			break;
-		}
-	}
-	if(i==list->cur){
-		return -1;
-	}
-	return i
-}
 
 
 
